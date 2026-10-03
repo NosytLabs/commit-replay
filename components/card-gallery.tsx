@@ -1,0 +1,6 @@
+'use client';
+import {useMemo} from 'react';
+import {createDemo} from '@/lib/recap/demo';
+import {makeReport,renderCard,type CardTheme,type CardCaption} from '@/lib/recap/export';
+import {useMascot} from './use-mascot';
+export default function CardGallery(){const mascot=useMascot();const report=useMemo(()=>makeReport(createDemo(),{timezone:'UTC',year:'all',includePrivate:false}),[]);const themes:{theme:CardTheme,name:string,copy:string,caption:CardCaption}[]=[{theme:'replay',name:'The original replay',copy:'A little lime. A lot of little commits.',caption:'none'},{theme:'midnight',name:'After hours',copy:'For the dark-mode part of your heart.',caption:'none'},{theme:'paper',name:'The notebook',copy:'Clean enough for the README. Still very you.',caption:'none'}];return <div className="gallery-grid">{themes.map(t=><article key={t.theme}><div className={'gallery-card gallery-'+t.theme}><img src={'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(renderCard(report,'square',t.theme,{mascot,caption:t.caption}))} width="1080" height="1080" alt={`${t.name} card using fictional sample data`}/></div><h2>{t.name}</h2><p>{t.copy}</p><span>PNG + SVG · Square, portrait, landscape</span></article>)}</div>;}

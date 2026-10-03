@@ -1,0 +1,2 @@
+import {InfoPage} from '@/components/site-chrome';
+export default function NotFound(){return <InfoPage active="" eyebrow="404 · BRANCH NOT FOUND" title="This page went off on a tangent." intro="The link may be old, or the page never made it out of a feature branch."><div className="not-found-art"><img src="/assets/commit-cat.png" width="220" height="220" alt="A coding cat pretending nothing happened"/><p>Nothing to merge here. Head back to your recap.</p></div></InfoPage>;}
