@@ -1,0 +1,53 @@
+name: CI
+
+# This repo had no workflow at all, so nothing gated a push and nothing would
+# have caught a broken build. The suite is fast (19 tests, no native modules), so
+# run it on every push and PR rather than only on main.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A superseded push on the same branch should not keep burning a runner.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          # package.json requires >=22.13.0 and the build targets a modern
+          # toolchain, so 22 is the floor the repo already declares.
+          node-version: 22
+          cache: npm
+
+      # scripts/install-ci.mjs is the repo's own installer. On a clean runner
+      # there is no .sites-runtime/execution-profile.json, so
+      # readExecutionProfile() returns "portable" and npm ci runs directly.
+      # Going through install:ci rather than a bare npm ci keeps local and CI
+      # installs on one code path, including the vinext availability check.
+      - name: Install dependencies
+        run: npm run install:ci
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # Lint is deliberately absent. `npm run lint` needs a real install to be
+      # meaningful, and a first CI run that fails on pre-existing findings is
+      # worse than no lint step: it teaches everyone to ignore a red box. Add
+      # it once the baseline is clean.
