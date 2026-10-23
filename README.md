@@ -13,6 +13,8 @@ npm run dev -- --host 127.0.0.1 --port 5173
 
 Open the printed local URL. No API keys, database, or paid services are required. Use `npm test`, `npm run typecheck`, and `npm run build` to verify changes. Production output targets Cloudflare Workers through the included Sites/Vinext starter; `.openai/hosting.json` identifies the managed Sites project, not a secret.
 
+The `build/` directory contains maintained Vite plugins and Worker entry points required by `vite.config.ts`. Keep it in version control. Generated output lives in `dist/` and `.vinext/`.
+
 ## Included
 
 - Real public GitHub lookup by username or profile URL.
